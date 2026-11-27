@@ -1,0 +1,6 @@
+single 76 findings
+agent 52 findings
+single 66 findings
+agent 39 findings
+single 0 findings
+agent 0 findings

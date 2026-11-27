@@ -1,0 +1,54 @@
+{
+ "tool": "ruff",
+ "seconds": 0.1,
+ "findings": [
+  {
+   "file": "api_client.py",
+   "line": 8,
+   "rule": "S113",
+   "message": "Probable use of `requests` call without timeout"
+  },
+  {
+   "file": "api_client.py",
+   "line": 11,
+   "rule": "S501",
+   "message": "Probable use of `requests` call with `verify=False` disabling SSL certificate checks"
+  },
+  {
+   "file": "auth.py",
+   "line": 5,
+   "rule": "S105",
+   "message": "Possible hardcoded password assigned to: \"SECRET_KEY\""
+  },
+  {
+   "file": "auth.py",
+   "line": 9,
+   "rule": "S324",
+   "message": "Probable use of insecure hash functions in `hashlib`: `md5`"
+  },
+  {
+   "file": "file_utils.py",
+   "line": 14,
+   "rule": "S605",
+   "message": "Starting a process with a shell, possible injection detected"
+  },
+  {
+   "file": "inventory.py",
+   "line": 8,
+   "rule": "B006",
+   "message": "Do not use mutable data structures for argument defaults"
+  },
+  {
+   "file": "session_store.py",
+   "line": 11,
+   "rule": "S301",
+   "message": "`pickle` and modules that wrap it can be unsafe when used to deserialize untrusted data, possible security issue"
+  },
+  {
+   "file": "user_repo.py",
+   "line": 10,
+   "rule": "S608",
+   "message": "Possible SQL injection vector through string-based query construction"
+  }
+ ]
+}

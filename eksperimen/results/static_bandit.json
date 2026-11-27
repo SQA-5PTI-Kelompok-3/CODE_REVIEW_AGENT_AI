@@ -1,0 +1,54 @@
+{
+ "tool": "bandit",
+ "seconds": 0.79,
+ "findings": [
+  {
+   "file": "api_client.py",
+   "line": 11,
+   "rule": "B501",
+   "message": "Call to requests with verify=False disabling SSL certificate checks, security issue."
+  },
+  {
+   "file": "api_client.py",
+   "line": 8,
+   "rule": "B113",
+   "message": "Call to requests without timeout"
+  },
+  {
+   "file": "auth.py",
+   "line": 5,
+   "rule": "B105",
+   "message": "Possible hardcoded password: 'sk_live_9f8a7d6c5b4e3f2a1b0c'"
+  },
+  {
+   "file": "auth.py",
+   "line": 9,
+   "rule": "B324",
+   "message": "Use of weak MD5 hash for security. Consider usedforsecurity=False"
+  },
+  {
+   "file": "file_utils.py",
+   "line": 14,
+   "rule": "B605",
+   "message": "Starting a process with a shell, possible injection detected, security issue."
+  },
+  {
+   "file": "session_store.py",
+   "line": 3,
+   "rule": "B403",
+   "message": "Consider possible security implications associated with pickle module."
+  },
+  {
+   "file": "session_store.py",
+   "line": 11,
+   "rule": "B301",
+   "message": "Pickle and modules that wrap it can be unsafe when used to deserialize untrusted data, possible security issue."
+  },
+  {
+   "file": "user_repo.py",
+   "line": 10,
+   "rule": "B608",
+   "message": "Possible SQL injection vector through string-based query construction."
+  }
+ ]
+}

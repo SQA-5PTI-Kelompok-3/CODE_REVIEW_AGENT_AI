@@ -1,0 +1,511 @@
+{
+ "cond": "agent",
+ "run": "1",
+ "model": "sonnet",
+ "reviews": [
+  {
+   "cond": "agent",
+   "file": "api_client.py",
+   "seconds": 6.5,
+   "num_turns": 3,
+   "cost_usd": 0.4192183,
+   "raw": "[{\"line\": 11, \"category\": \"security\", \"severity\": \"high\", \"message\": \"verify=False disables TLS certificate verification on the payment charge call, so a network attacker can perform a man-in-the-middle attack and read or alter card tokens and amounts.\"}, {\"line\": 8, \"category\": \"resource\", \"severity\": \"medium\", \"message\": \"requests.post in charge() has no timeout, so an unresponsive payment gateway hangs the caller indefinitely (refund() sets timeout=10, which makes the omission inconsistent).\"}, {\"line\": 13, \"category\": \"error-handling\", \"severity\": \"medium\", \"message\": \"charge() has no handling for timeouts, connection errors or HTTP failures, and it has no idempotency key. A caller that retries after a network failure can double-charge a card because it cannot tell whether the first request succeeded.\"}]",
+   "findings": [
+    {
+     "line": 11,
+     "category": "security",
+     "severity": "high",
+     "message": "verify=False disables TLS certificate verification on the payment charge call, so a network attacker can perform a man-in-the-middle attack and read or alter card tokens and amounts.",
+     "file": "api_client.py"
+    },
+    {
+     "line": 8,
+     "category": "resource",
+     "severity": "medium",
+     "message": "requests.post in charge() has no timeout, so an unresponsive payment gateway hangs the caller indefinitely (refund() sets timeout=10, which makes the omission inconsistent).",
+     "file": "api_client.py"
+    },
+    {
+     "line": 13,
+     "category": "error-handling",
+     "severity": "medium",
+     "message": "charge() has no handling for timeouts, connection errors or HTTP failures, and it has no idempotency key. A caller that retries after a network failure can double-charge a card because it cannot tell whether the first request succeeded.",
+     "file": "api_client.py"
+    }
+   ]
+  },
+  {
+   "cond": "agent",
+   "file": "auth.py",
+   "seconds": 6.6,
+   "num_turns": 3,
+   "cost_usd": 0.029086800000000003,
+   "raw": "[{\"line\": 5, \"category\": \"security\", \"severity\": \"high\", \"message\": \"Live signing secret is hardcoded in source, so anyone with repo access can forge valid tokens; load it from an environment variable or secret store instead.\"},\n{\"line\": 9, \"category\": \"security\", \"severity\": \"high\", \"message\": \"Passwords are hashed with unsalted MD5, which is fast to brute-force and vulnerable to rainbow tables and identical-hash correlation if the hash database leaks; use bcrypt, scrypt, or argon2 with a per-user salt.\"},\n{\"line\": 13, \"category\": \"security\", \"severity\": \"medium\", \"message\": \"The password hash is compared with `==`, which is not constant-time and can leak timing information; use hmac.compare_digest.\"},\n{\"line\": 22, \"category\": \"security\", \"severity\": \"high\", \"message\": \"The token is compared with `==`, which is not constant-time, so an attacker can recover a valid HMAC signature byte by byte through timing; use hmac.compare_digest.\"}]",
+   "findings": [
+    {
+     "line": 5,
+     "category": "security",
+     "severity": "high",
+     "message": "Live signing secret is hardcoded in source, so anyone with repo access can forge valid tokens; load it from an environment variable or secret store instead.",
+     "file": "auth.py"
+    },
+    {
+     "line": 9,
+     "category": "security",
+     "severity": "high",
+     "message": "Passwords are hashed with unsalted MD5, which is fast to brute-force and vulnerable to rainbow tables and identical-hash correlation if the hash database leaks; use bcrypt, scrypt, or argon2 with a per-user salt.",
+     "file": "auth.py"
+    },
+    {
+     "line": 13,
+     "category": "security",
+     "severity": "medium",
+     "message": "The password hash is compared with `==`, which is not constant-time and can leak timing information; use hmac.compare_digest.",
+     "file": "auth.py"
+    },
+    {
+     "line": 22,
+     "category": "security",
+     "severity": "high",
+     "message": "The token is compared with `==`, which is not constant-time, so an attacker can recover a valid HMAC signature byte by byte through timing; use hmac.compare_digest.",
+     "file": "auth.py"
+    }
+   ]
+  },
+  {
+   "cond": "agent",
+   "file": "cache.py",
+   "seconds": 8.7,
+   "num_turns": 4,
+   "cost_usd": 0.9696408000000001,
+   "raw": "[{\"line\": 19, \"category\": \"concurrency\", \"severity\": \"high\", \"message\": \"get_or_compute reads and writes self._data without holding self._lock, even though the class is documented as thread-safe; two threads that miss the same key both run compute() and race on the write, and the dict can be mutated while clear() or get() runs under the lock.\"}, {\"line\": 21, \"category\": \"concurrency\", \"severity\": \"medium\", \"message\": \"self._hits is incremented outside the lock, so concurrent calls lose updates (the += is a non-atomic read-modify-write), and the hit counter becomes inconsistent with the increment in get().\"}, {\"line\": 21, \"category\": \"logic\", \"severity\": \"medium\", \"message\": \"get_or_compute increments _hits unconditionally, including when the key was missing and compute() just ran, so cache misses are counted as hits and the hit counter is overstated.\"}, {\"line\": 20, \"category\": \"error-handling\", \"severity\": \"low\", \"message\": \"If compute() raises, nothing is cached and the exception propagates, which is acceptable. But if compute() returns None, the value is stored and get() cannot tell a cached None from a miss. A caller using get() to test for presence will recompute or misread the result.\"}, {\"line\": 13, \"category\": \"logic\", \"severity\": \"low\", \"message\": \"get() returns None for both a missing key and a stored None value, and a stored None still counts as a hit, so callers cannot tell a miss from a cached None.\"}]",
+   "findings": [
+    {
+     "line": 19,
+     "category": "concurrency",
+     "severity": "high",
+     "message": "get_or_compute reads and writes self._data without holding self._lock, even though the class is documented as thread-safe; two threads that miss the same key both run compute() and race on the write, and the dict can be mutated while clear() or get() runs under the lock.",
+     "file": "cache.py"
+    },
+    {
+     "line": 21,
+     "category": "concurrency",
+     "severity": "medium",
+     "message": "self._hits is incremented outside the lock, so concurrent calls lose updates (the += is a non-atomic read-modify-write), and the hit counter becomes inconsistent with the increment in get().",
+     "file": "cache.py"
+    },
+    {
+     "line": 21,
+     "category": "logic",
+     "severity": "medium",
+     "message": "get_or_compute increments _hits unconditionally, including when the key was missing and compute() just ran, so cache misses are counted as hits and the hit counter is overstated.",
+     "file": "cache.py"
+    },
+    {
+     "line": 20,
+     "category": "error-handling",
+     "severity": "low",
+     "message": "If compute() raises, nothing is cached and the exception propagates, which is acceptable. But if compute() returns None, the value is stored and get() cannot tell a cached None from a miss. A caller using get() to test for presence will recompute or misread the result.",
+     "file": "cache.py"
+    },
+    {
+     "line": 13,
+     "category": "logic",
+     "severity": "low",
+     "message": "get() returns None for both a missing key and a stored None value, and a stored None still counts as a hit, so callers cannot tell a miss from a cached None.",
+     "file": "cache.py"
+    }
+   ]
+  },
+  {
+   "cond": "agent",
+   "file": "date_utils.py",
+   "seconds": 5.9,
+   "num_turns": 3,
+   "cost_usd": 0.41174000000000005,
+   "raw": "[{\"line\": 5, \"category\": \"logic\", \"severity\": \"high\", \"message\": \"is_leap_year only checks year % 4, so century years not divisible by 400 (e.g. 1900, 2100) are wrongly treated as leap years and days_in_month(1900, 2) returns 29 instead of 28.\"}, {\"line\": 8, \"category\": \"error-handling\", \"severity\": \"low\", \"message\": \"days_in_month does not validate month, so out-of-range values such as 0, 13 or None fall through to the default and return 31 instead of raising an error.\"}]",
+   "findings": [
+    {
+     "line": 5,
+     "category": "logic",
+     "severity": "high",
+     "message": "is_leap_year only checks year % 4, so century years not divisible by 400 (e.g. 1900, 2100) are wrongly treated as leap years and days_in_month(1900, 2) returns 29 instead of 28.",
+     "file": "date_utils.py"
+    },
+    {
+     "line": 8,
+     "category": "error-handling",
+     "severity": "low",
+     "message": "days_in_month does not validate month, so out-of-range values such as 0, 13 or None fall through to the default and return 31 instead of raising an error.",
+     "file": "date_utils.py"
+    }
+   ]
+  },
+  {
+   "cond": "agent",
+   "file": "discount.py",
+   "seconds": 7.0,
+   "num_turns": 3,
+   "cost_usd": 0.414658,
+   "raw": "[{\"line\": 12, \"category\": \"logic\", \"severity\": \"medium\", \"message\": \"The docstring says orders of 100 or more get the 10% discount, but `total > 100` excludes exactly 100, so an order of 100 pays full price instead of 90.\"}, {\"line\": 14, \"category\": \"logic\", \"severity\": \"high\", \"message\": \"The docstring says the final price can never be negative, but nothing clamps it: a coupon larger than the discounted total (for example total=50, coupon_value=80) returns -30.0.\"}, {\"line\": 14, \"category\": \"error-handling\", \"severity\": \"low\", \"message\": \"A negative coupon_value is not validated, so it increases the price, and coupon_value=None raises TypeError.\"}, {\"line\": 15, \"category\": \"logic\", \"severity\": \"low\", \"message\": \"Prices are handled as binary floats, and round() uses banker's rounding. Totals such as 100.05 * 0.9 can come out a cent off, and the code should use Decimal for money.\"}]",
+   "findings": [
+    {
+     "line": 12,
+     "category": "logic",
+     "severity": "medium",
+     "message": "The docstring says orders of 100 or more get the 10% discount, but `total > 100` excludes exactly 100, so an order of 100 pays full price instead of 90.",
+     "file": "discount.py"
+    },
+    {
+     "line": 14,
+     "category": "logic",
+     "severity": "high",
+     "message": "The docstring says the final price can never be negative, but nothing clamps it: a coupon larger than the discounted total (for example total=50, coupon_value=80) returns -30.0.",
+     "file": "discount.py"
+    },
+    {
+     "line": 14,
+     "category": "error-handling",
+     "severity": "low",
+     "message": "A negative coupon_value is not validated, so it increases the price, and coupon_value=None raises TypeError.",
+     "file": "discount.py"
+    },
+    {
+     "line": 15,
+     "category": "logic",
+     "severity": "low",
+     "message": "Prices are handled as binary floats, and round() uses banker's rounding. Totals such as 100.05 * 0.9 can come out a cent off, and the code should use Decimal for money.",
+     "file": "discount.py"
+    }
+   ]
+  },
+  {
+   "cond": "agent",
+   "file": "file_utils.py",
+   "seconds": 7.1,
+   "num_turns": 3,
+   "cost_usd": 0.0291096,
+   "raw": "[{\"line\": 8, \"category\": \"security\", \"severity\": \"high\", \"message\": \"os.path.join with an unvalidated filename allows path traversal: '../../etc/passwd' or an absolute path like '/etc/passwd' (which discards UPLOAD_DIR) lets a caller read arbitrary files outside the uploads directory.\"},\n{\"line\": 14, \"category\": \"security\", \"severity\": \"high\", \"message\": \"os.system builds a shell command by concatenating an unsanitized filename, so a name like 'x; rm -rf /' or one containing spaces, '$(...)' or backticks executes arbitrary commands (command injection), and path traversal also lets it target files outside UPLOAD_DIR.\"},\n{\"line\": 14, \"category\": \"error-handling\", \"severity\": \"low\", \"message\": \"The return status of os.system is ignored, so a gzip failure (missing file, existing .gz output, or a filename with spaces being split into multiple arguments) goes unnoticed and the caller assumes the upload was compressed.\"},\n{\"line\": 9, \"category\": \"error-handling\", \"severity\": \"low\", \"message\": \"read_upload does not handle a missing file or a directory path, so FileNotFoundError or IsADirectoryError propagates to the admin panel caller as an unhandled exception.\"}]",
+   "findings": [
+    {
+     "line": 8,
+     "category": "security",
+     "severity": "high",
+     "message": "os.path.join with an unvalidated filename allows path traversal: '../../etc/passwd' or an absolute path like '/etc/passwd' (which discards UPLOAD_DIR) lets a caller read arbitrary files outside the uploads directory.",
+     "file": "file_utils.py"
+    },
+    {
+     "line": 14,
+     "category": "security",
+     "severity": "high",
+     "message": "os.system builds a shell command by concatenating an unsanitized filename, so a name like 'x; rm -rf /' or one containing spaces, '$(...)' or backticks executes arbitrary commands (command injection), and path traversal also lets it target files outside UPLOAD_DIR.",
+     "file": "file_utils.py"
+    },
+    {
+     "line": 14,
+     "category": "error-handling",
+     "severity": "low",
+     "message": "The return status of os.system is ignored, so a gzip failure (missing file, existing .gz output, or a filename with spaces being split into multiple arguments) goes unnoticed and the caller assumes the upload was compressed.",
+     "file": "file_utils.py"
+    },
+    {
+     "line": 9,
+     "category": "error-handling",
+     "severity": "low",
+     "message": "read_upload does not handle a missing file or a directory path, so FileNotFoundError or IsADirectoryError propagates to the admin panel caller as an unhandled exception.",
+     "file": "file_utils.py"
+    }
+   ]
+  },
+  {
+   "cond": "agent",
+   "file": "inventory.py",
+   "seconds": 7.0,
+   "num_turns": 3,
+   "cost_usd": 0.0292292,
+   "raw": "[{\"line\":8,\"category\":\"logic\",\"severity\":\"high\",\"message\":\"Mutable default argument `tags=[]` is shared across calls, so every add_item call without tags appends \\\"new\\\" to the same list and all items end up sharing one tags list that keeps growing (e.g. [\\\"new\\\",\\\"new\\\",...]).\"},{\"line\":9,\"category\":\"logic\",\"severity\":\"medium\",\"message\":\"Mutates the caller-supplied tags list in place by appending \\\"new\\\", so a list passed by the caller is silently modified and shared between items if reused.\"},{\"line\":10,\"category\":\"logic\",\"severity\":\"medium\",\"message\":\"Re-adding an existing name overwrites the entry and discards its current qty instead of merging, and no validation rejects negative or non-numeric qty.\"},{\"line\":15,\"category\":\"logic\",\"severity\":\"high\",\"message\":\"remove_item does not check that qty <= available stock or that qty is non-negative, so removing more than is in stock drives qty negative (and a negative qty increases stock).\"},{\"line\":20,\"category\":\"logic\",\"severity\":\"high\",\"message\":\"range(len(names) - 1) skips the last item, so total_stock under-counts (e.g. a single item yields 0, and the last-added item is always omitted).\"}]",
+   "findings": [
+    {
+     "line": 8,
+     "category": "logic",
+     "severity": "high",
+     "message": "Mutable default argument `tags=[]` is shared across calls, so every add_item call without tags appends \"new\" to the same list and all items end up sharing one tags list that keeps growing (e.g. [\"new\",\"new\",...]).",
+     "file": "inventory.py"
+    },
+    {
+     "line": 9,
+     "category": "logic",
+     "severity": "medium",
+     "message": "Mutates the caller-supplied tags list in place by appending \"new\", so a list passed by the caller is silently modified and shared between items if reused.",
+     "file": "inventory.py"
+    },
+    {
+     "line": 10,
+     "category": "logic",
+     "severity": "medium",
+     "message": "Re-adding an existing name overwrites the entry and discards its current qty instead of merging, and no validation rejects negative or non-numeric qty.",
+     "file": "inventory.py"
+    },
+    {
+     "line": 15,
+     "category": "logic",
+     "severity": "high",
+     "message": "remove_item does not check that qty <= available stock or that qty is non-negative, so removing more than is in stock drives qty negative (and a negative qty increases stock).",
+     "file": "inventory.py"
+    },
+    {
+     "line": 20,
+     "category": "logic",
+     "severity": "high",
+     "message": "range(len(names) - 1) skips the last item, so total_stock under-counts (e.g. a single item yields 0, and the last-added item is always omitted).",
+     "file": "inventory.py"
+    }
+   ]
+  },
+  {
+   "cond": "agent",
+   "file": "money.py",
+   "seconds": 13.6,
+   "num_turns": 4,
+   "cost_usd": 0.6478704,
+   "raw": "[{\"line\": 6, \"category\": \"logic\", \"severity\": \"medium\", \"message\": \"Extra fractional digits are silently truncated rather than rejected or rounded, so to_cents('0.999') returns 99 and to_cents('1.005') returns 100, losing money without any error.\"}, {\"line\": 8, \"category\": \"error-handling\", \"severity\": \"medium\", \"message\": \"The fractional part is only sliced and passed to int(), so malformed input like '1.-5' or '1.+5' parses as 95 or 105 (int accepts signs and underscores). A negative fraction silently produces a wrong amount instead of raising ValueError.\"}, {\"line\": 8, \"category\": \"error-handling\", \"severity\": \"low\", \"message\": \"An empty or whitespace-only string such as '' or '.' returns 0 cents instead of raising, so a missing amount is silently treated as zero. Meanwhile '-.50' raises ValueError because int('-') fails, so valid-looking negative fractions are rejected.\"}]",
+   "findings": [
+    {
+     "line": 6,
+     "category": "logic",
+     "severity": "medium",
+     "message": "Extra fractional digits are silently truncated rather than rejected or rounded, so to_cents('0.999') returns 99 and to_cents('1.005') returns 100, losing money without any error.",
+     "file": "money.py"
+    },
+    {
+     "line": 8,
+     "category": "error-handling",
+     "severity": "medium",
+     "message": "The fractional part is only sliced and passed to int(), so malformed input like '1.-5' or '1.+5' parses as 95 or 105 (int accepts signs and underscores). A negative fraction silently produces a wrong amount instead of raising ValueError.",
+     "file": "money.py"
+    },
+    {
+     "line": 8,
+     "category": "error-handling",
+     "severity": "low",
+     "message": "An empty or whitespace-only string such as '' or '.' returns 0 cents instead of raising, so a missing amount is silently treated as zero. Meanwhile '-.50' raises ValueError because int('-') fails, so valid-looking negative fractions are rejected.",
+     "file": "money.py"
+    }
+   ]
+  },
+  {
+   "cond": "agent",
+   "file": "order_parser.py",
+   "seconds": 7.0,
+   "num_turns": 3,
+   "cost_usd": 0.41462400000000005,
+   "raw": "[{\"line\": 9, \"category\": \"error-handling\", \"severity\": \"medium\", \"message\": \"Bare `except:` swallows every failure (malformed JSON, missing keys, non-numeric id) and even KeyboardInterrupt/SystemExit, returning None with no logging, so bad payloads are silently dropped and root causes are undiagnosable.\"}, {\"line\": 8, \"category\": \"logic\", \"severity\": \"medium\", \"message\": \"`data[\\\"items\\\"]` is returned without validation, so a payload like {\\\"id\\\": 1, \\\"items\\\": null} or {\\\"id\\\": 1, \\\"items\\\": 5} yields a 'valid' order whose items is None or an int, which breaks downstream consumers; JSON that isn't an object (e.g. a list) is only caught by the bare except.\"}, {\"line\": 15, \"category\": \"error-handling\", \"severity\": \"high\", \"message\": \"`order_item_count` does not handle `parse_order` returning None, so any invalid or malformed input raises TypeError ('NoneType' object is not subscriptable) instead of being handled; it also raises TypeError via len() if items is None or an int.\"}]",
+   "findings": [
+    {
+     "line": 9,
+     "category": "error-handling",
+     "severity": "medium",
+     "message": "Bare `except:` swallows every failure (malformed JSON, missing keys, non-numeric id) and even KeyboardInterrupt/SystemExit, returning None with no logging, so bad payloads are silently dropped and root causes are undiagnosable.",
+     "file": "order_parser.py"
+    },
+    {
+     "line": 8,
+     "category": "logic",
+     "severity": "medium",
+     "message": "`data[\"items\"]` is returned without validation, so a payload like {\"id\": 1, \"items\": null} or {\"id\": 1, \"items\": 5} yields a 'valid' order whose items is None or an int, which breaks downstream consumers; JSON that isn't an object (e.g. a list) is only caught by the bare except.",
+     "file": "order_parser.py"
+    },
+    {
+     "line": 15,
+     "category": "error-handling",
+     "severity": "high",
+     "message": "`order_item_count` does not handle `parse_order` returning None, so any invalid or malformed input raises TypeError ('NoneType' object is not subscriptable) instead of being handled; it also raises TypeError via len() if items is None or an int.",
+     "file": "order_parser.py"
+    }
+   ]
+  },
+  {
+   "cond": "agent",
+   "file": "report.py",
+   "seconds": 9.4,
+   "num_turns": 3,
+   "cost_usd": 0.41815800000000003,
+   "raw": "[{\"line\": 5, \"category\": \"performance\", \"severity\": \"medium\", \"message\": \"`seen` is a list, so each `order['customer_id'] not in seen` check is O(n); with many orders and mostly distinct customers this becomes quadratic (e.g. 100k orders is about 5 billion comparisons). A set for membership alongside the ordered list would fix it.\"}, {\"line\": 15, \"category\": \"error-handling\", \"severity\": \"low\", \"message\": \"`order['date'][:10]` assumes `date` is a string. If it is a `datetime`, `date` or None, this raises TypeError and the whole report fails. A missing 'date' or 'amount' key raises KeyError for the same reason, with no handling or skipping of bad records.\"}, {\"line\": 16, \"category\": \"logic\", \"severity\": \"low\", \"message\": \"Amounts are summed with plain `+`. If `amount` is a float, as is typical for money, rounding errors accumulate and the written totals can look like 10.299999999999999. If `amount` is a string, it raises TypeError or concatenates. Decimal or integer cents would avoid this.\"}, {\"line\": 21, \"category\": \"resource\", \"severity\": \"high\", \"message\": \"`open(path, 'w')` is never closed and has no `with` block. If `f.write` raises, or on non-refcounting interpreters, the buffered data may not be flushed. The report file can then be truncated or empty, and the handle leaks.\"}, {\"line\": 21, \"category\": \"other\", \"severity\": \"low\", \"message\": \"The file is opened without `encoding` or `newline=''`. On Windows the default locale encoding and CRLF translation vary, so the CSV output differs by platform. It also overwrites any existing report in place, so a failure mid-write leaves a partial file.\"}, {\"line\": 23, \"category\": \"logic\", \"severity\": \"low\", \"message\": \"The CSV row is written with a bare f-string and no header. The day is not quoted or escaped, so a malformed date value containing a comma or newline corrupts the row structure. The `csv` module would handle this.\"}]",
+   "findings": [
+    {
+     "line": 5,
+     "category": "performance",
+     "severity": "medium",
+     "message": "`seen` is a list, so each `order['customer_id'] not in seen` check is O(n); with many orders and mostly distinct customers this becomes quadratic (e.g. 100k orders is about 5 billion comparisons). A set for membership alongside the ordered list would fix it.",
+     "file": "report.py"
+    },
+    {
+     "line": 15,
+     "category": "error-handling",
+     "severity": "low",
+     "message": "`order['date'][:10]` assumes `date` is a string. If it is a `datetime`, `date` or None, this raises TypeError and the whole report fails. A missing 'date' or 'amount' key raises KeyError for the same reason, with no handling or skipping of bad records.",
+     "file": "report.py"
+    },
+    {
+     "line": 16,
+     "category": "logic",
+     "severity": "low",
+     "message": "Amounts are summed with plain `+`. If `amount` is a float, as is typical for money, rounding errors accumulate and the written totals can look like 10.299999999999999. If `amount` is a string, it raises TypeError or concatenates. Decimal or integer cents would avoid this.",
+     "file": "report.py"
+    },
+    {
+     "line": 21,
+     "category": "resource",
+     "severity": "high",
+     "message": "`open(path, 'w')` is never closed and has no `with` block. If `f.write` raises, or on non-refcounting interpreters, the buffered data may not be flushed. The report file can then be truncated or empty, and the handle leaks.",
+     "file": "report.py"
+    },
+    {
+     "line": 21,
+     "category": "other",
+     "severity": "low",
+     "message": "The file is opened without `encoding` or `newline=''`. On Windows the default locale encoding and CRLF translation vary, so the CSV output differs by platform. It also overwrites any existing report in place, so a failure mid-write leaves a partial file.",
+     "file": "report.py"
+    },
+    {
+     "line": 23,
+     "category": "logic",
+     "severity": "low",
+     "message": "The CSV row is written with a bare f-string and no header. The day is not quoted or escaped, so a malformed date value containing a comma or newline corrupts the row structure. The `csv` module would handle this.",
+     "file": "report.py"
+    }
+   ]
+  },
+  {
+   "cond": "agent",
+   "file": "session_store.py",
+   "seconds": 6.5,
+   "num_turns": 3,
+   "cost_usd": 0.028247200000000004,
+   "raw": "[{\"line\": 11, \"category\": \"security\", \"severity\": \"high\", \"message\": \"pickle.loads is called on a client-supplied, unsigned cookie, so an attacker can send a crafted pickle payload and get arbitrary code execution on the server.\"}, {\"line\": 7, \"category\": \"security\", \"severity\": \"high\", \"message\": \"The session is serialized with pickle into an unsigned, unencrypted cookie, so users can read and tamper with it, for example by forging {'role': 'admin'}.\"}, {\"line\": 16, \"category\": \"security\", \"severity\": \"high\", \"message\": \"is_admin trusts the 'role' field from an unauthenticated client-controlled cookie, so any user can forge an admin session and escalate privileges.\"}, {\"line\": 15, \"category\": \"error-handling\", \"severity\": \"medium\", \"message\": \"load_session raises on a malformed or missing cookie (bad base64, bad pickle, or None), and is_admin also fails with AttributeError if the payload is not a dict, so a bad cookie causes an unhandled exception (a 500) instead of a deny result.\"}]",
+   "findings": [
+    {
+     "line": 11,
+     "category": "security",
+     "severity": "high",
+     "message": "pickle.loads is called on a client-supplied, unsigned cookie, so an attacker can send a crafted pickle payload and get arbitrary code execution on the server.",
+     "file": "session_store.py"
+    },
+    {
+     "line": 7,
+     "category": "security",
+     "severity": "high",
+     "message": "The session is serialized with pickle into an unsigned, unencrypted cookie, so users can read and tamper with it, for example by forging {'role': 'admin'}.",
+     "file": "session_store.py"
+    },
+    {
+     "line": 16,
+     "category": "security",
+     "severity": "high",
+     "message": "is_admin trusts the 'role' field from an unauthenticated client-controlled cookie, so any user can forge an admin session and escalate privileges.",
+     "file": "session_store.py"
+    },
+    {
+     "line": 15,
+     "category": "error-handling",
+     "severity": "medium",
+     "message": "load_session raises on a malformed or missing cookie (bad base64, bad pickle, or None), and is_admin also fails with AttributeError if the payload is not a dict, so a bad cookie causes an unhandled exception (a 500) instead of a deny result.",
+     "file": "session_store.py"
+    }
+   ]
+  },
+  {
+   "cond": "agent",
+   "file": "stats.py",
+   "seconds": 7.1,
+   "num_turns": 3,
+   "cost_usd": 0.414514,
+   "raw": "[{\"line\":5,\"category\":\"error-handling\",\"severity\":\"medium\",\"message\":\"average([]) divides by len(values) == 0 and raises an unhandled ZeroDivisionError, for example when there are no sales in a period.\"},{\"line\":11,\"category\":\"logic\",\"severity\":\"high\",\"message\":\"median returns s[len//2] for even-length input instead of the mean of the two middle values, so median([1,2,3,4]) gives 3 instead of 2.5.\"},{\"line\":11,\"category\":\"error-handling\",\"severity\":\"medium\",\"message\":\"median([]) computes mid=0 and then indexes s[0] on an empty list, raising an unhandled IndexError.\"}]",
+   "findings": [
+    {
+     "line": 5,
+     "category": "error-handling",
+     "severity": "medium",
+     "message": "average([]) divides by len(values) == 0 and raises an unhandled ZeroDivisionError, for example when there are no sales in a period.",
+     "file": "stats.py"
+    },
+    {
+     "line": 11,
+     "category": "logic",
+     "severity": "high",
+     "message": "median returns s[len//2] for even-length input instead of the mean of the two middle values, so median([1,2,3,4]) gives 3 instead of 2.5.",
+     "file": "stats.py"
+    },
+    {
+     "line": 11,
+     "category": "error-handling",
+     "severity": "medium",
+     "message": "median([]) computes mid=0 and then indexes s[0] on an empty list, raising an unhandled IndexError.",
+     "file": "stats.py"
+    }
+   ]
+  },
+  {
+   "cond": "agent",
+   "file": "task_queue.py",
+   "seconds": 8.3,
+   "num_turns": 3,
+   "cost_usd": 0.41561000000000003,
+   "raw": "[{\"line\": 17, \"category\": \"concurrency\", \"severity\": \"medium\", \"message\": \"put() waits on the condition with no timeout, no non-blocking mode and no close/shutdown signal, so a producer blocks forever once the queue is full and the consumers have stopped, which hangs the process at shutdown.\"},{\"line\": 24, \"category\": \"concurrency\", \"severity\": \"medium\", \"message\": \"get() waits on the condition with no timeout and no close/sentinel mechanism, so a worker thread calling get() on an empty queue can never be woken to exit, and the process cannot shut down cleanly.\"},{\"line\": 19, \"category\": \"performance\", \"severity\": \"low\", \"message\": \"notify_all() in put() wakes every waiting thread, but only a consumer needs waking and only one item was added. With many workers this causes a thundering herd, and the same pattern in get() at line 26 wakes all blocked producers for one freed slot.\"}]",
+   "findings": [
+    {
+     "line": 17,
+     "category": "concurrency",
+     "severity": "medium",
+     "message": "put() waits on the condition with no timeout, no non-blocking mode and no close/shutdown signal, so a producer blocks forever once the queue is full and the consumers have stopped, which hangs the process at shutdown.",
+     "file": "task_queue.py"
+    },
+    {
+     "line": 24,
+     "category": "concurrency",
+     "severity": "medium",
+     "message": "get() waits on the condition with no timeout and no close/sentinel mechanism, so a worker thread calling get() on an empty queue can never be woken to exit, and the process cannot shut down cleanly.",
+     "file": "task_queue.py"
+    },
+    {
+     "line": 19,
+     "category": "performance",
+     "severity": "low",
+     "message": "notify_all() in put() wakes every waiting thread, but only a consumer needs waking and only one item was added. With many workers this causes a thundering herd, and the same pattern in get() at line 26 wakes all blocked producers for one freed slot.",
+     "file": "task_queue.py"
+    }
+   ]
+  },
+  {
+   "cond": "agent",
+   "file": "user_repo.py",
+   "seconds": 6.3,
+   "num_turns": 3,
+   "cost_usd": 0.0287136,
+   "raw": "[{\"line\": 10, \"category\": \"security\", \"severity\": \"high\", \"message\": \"The username is interpolated straight into the SQL string with an f-string, so an input like `' OR '1'='1` or `'; DROP TABLE users;--` changes the query (SQL injection). Use a parameterized query: `execute(\\\"... WHERE username = ?\\\", (username,))`.\"}, {\"line\": 8, \"category\": \"resource\", \"severity\": \"medium\", \"message\": \"The sqlite3 connection is never closed in find_user_by_name, and a `with` block would not close it either (it only commits or rolls back). Each call leaks a connection and file handle, which can lock the DB file or exhaust handles under repeated calls.\"}, {\"line\": 16, \"category\": \"resource\", \"severity\": \"low\", \"message\": \"`with sqlite3.connect(...) as conn` only commits or rolls back the transaction and does not close the connection. Both create_user and count_users (line 23) leak a connection on every call. Wrap the connection in `contextlib.closing`.\"}]",
+   "findings": [
+    {
+     "line": 10,
+     "category": "security",
+     "severity": "high",
+     "message": "The username is interpolated straight into the SQL string with an f-string, so an input like `' OR '1'='1` or `'; DROP TABLE users;--` changes the query (SQL injection). Use a parameterized query: `execute(\"... WHERE username = ?\", (username,))`.",
+     "file": "user_repo.py"
+    },
+    {
+     "line": 8,
+     "category": "resource",
+     "severity": "medium",
+     "message": "The sqlite3 connection is never closed in find_user_by_name, and a `with` block would not close it either (it only commits or rolls back). Each call leaks a connection and file handle, which can lock the DB file or exhaust handles under repeated calls.",
+     "file": "user_repo.py"
+    },
+    {
+     "line": 16,
+     "category": "resource",
+     "severity": "low",
+     "message": "`with sqlite3.connect(...) as conn` only commits or rolls back the transaction and does not close the connection. Both create_user and count_users (line 23) leak a connection on every call. Wrap the connection in `contextlib.closing`.",
+     "file": "user_repo.py"
+    }
+   ]
+  }
+ ]
+}

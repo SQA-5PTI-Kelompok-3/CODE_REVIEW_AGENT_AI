@@ -1,0 +1,679 @@
+{
+ "cond": "single",
+ "run": "1",
+ "model": "sonnet",
+ "reviews": [
+  {
+   "cond": "single",
+   "file": "api_client.py",
+   "seconds": 6.7,
+   "num_turns": 1,
+   "cost_usd": 0.016720899999999997,
+   "raw": "[\n{\"line\": 11, \"category\": \"security\", \"severity\": \"high\", \"message\": \"verify=False disables TLS certificate validation on a payment request, allowing man-in-the-middle interception of card tokens and charge data.\"},\n{\"line\": 8, \"category\": \"error-handling\", \"severity\": \"high\", \"message\": \"The charge request has no timeout, so a hung gateway connection can block the caller indefinitely.\"},\n{\"line\": 8, \"category\": \"logic\", \"severity\": \"high\", \"message\": \"The charge call has no idempotency key, so any retry after a network failure or timeout can double-charge the customer.\"},\n{\"line\": 13, \"category\": \"error-handling\", \"severity\": \"medium\", \"message\": \"raise_for_status discards the gateway's error response body and there is no handling of requests exceptions, so declined cards, timeouts and connection errors are not distinguished for callers.\"},\n{\"line\": 14, \"category\": \"error-handling\", \"severity\": \"low\", \"message\": \"resp.json() can raise ValueError on a non-JSON success response, leaving callers unsure whether the charge went through.\"},\n{\"line\": 7, \"category\": \"logic\", \"severity\": \"medium\", \"message\": \"The amount is not validated and no currency is sent, so negative, zero or float amounts and ambiguous currency can produce incorrect charges.\"},\n{\"line\": 18, \"category\": \"logic\", \"severity\": \"medium\", \"message\": \"The refund request has no idempotency key and no amount, so retries may cause duplicate refunds and partial refunds are not supported.\"},\n{\"line\": 8, \"category\": \"performance\", \"severity\": \"low\", \"message\": \"Each call uses bare requests.post without a shared Session, so connections are not reused and there is no retry or backoff policy.\"},\n{\"line\": 8, \"category\": \"security\", \"severity\": \"medium\", \"message\": \"No authentication header or API key is sent to the payment gateway, so the requests are either unauthenticated or rely on unseen configuration.\"}\n]",
+   "findings": [
+    {
+     "line": 11,
+     "category": "security",
+     "severity": "high",
+     "message": "verify=False disables TLS certificate validation on a payment request, allowing man-in-the-middle interception of card tokens and charge data.",
+     "file": "api_client.py"
+    },
+    {
+     "line": 8,
+     "category": "error-handling",
+     "severity": "high",
+     "message": "The charge request has no timeout, so a hung gateway connection can block the caller indefinitely.",
+     "file": "api_client.py"
+    },
+    {
+     "line": 8,
+     "category": "logic",
+     "severity": "high",
+     "message": "The charge call has no idempotency key, so any retry after a network failure or timeout can double-charge the customer.",
+     "file": "api_client.py"
+    },
+    {
+     "line": 13,
+     "category": "error-handling",
+     "severity": "medium",
+     "message": "raise_for_status discards the gateway's error response body and there is no handling of requests exceptions, so declined cards, timeouts and connection errors are not distinguished for callers.",
+     "file": "api_client.py"
+    },
+    {
+     "line": 14,
+     "category": "error-handling",
+     "severity": "low",
+     "message": "resp.json() can raise ValueError on a non-JSON success response, leaving callers unsure whether the charge went through.",
+     "file": "api_client.py"
+    },
+    {
+     "line": 7,
+     "category": "logic",
+     "severity": "medium",
+     "message": "The amount is not validated and no currency is sent, so negative, zero or float amounts and ambiguous currency can produce incorrect charges.",
+     "file": "api_client.py"
+    },
+    {
+     "line": 18,
+     "category": "logic",
+     "severity": "medium",
+     "message": "The refund request has no idempotency key and no amount, so retries may cause duplicate refunds and partial refunds are not supported.",
+     "file": "api_client.py"
+    },
+    {
+     "line": 8,
+     "category": "performance",
+     "severity": "low",
+     "message": "Each call uses bare requests.post without a shared Session, so connections are not reused and there is no retry or backoff policy.",
+     "file": "api_client.py"
+    },
+    {
+     "line": 8,
+     "category": "security",
+     "severity": "medium",
+     "message": "No authentication header or API key is sent to the payment gateway, so the requests are either unauthenticated or rely on unseen configuration.",
+     "file": "api_client.py"
+    }
+   ]
+  },
+  {
+   "cond": "single",
+   "file": "auth.py",
+   "seconds": 4.9,
+   "num_turns": 1,
+   "cost_usd": 0.0143949,
+   "raw": "[\n{\"line\":5,\"category\":\"security\",\"severity\":\"high\",\"message\":\"Hardcoded live secret key committed in source; it should be loaded from environment or a secret manager and rotated.\"},\n{\"line\":9,\"category\":\"security\",\"severity\":\"high\",\"message\":\"MD5 is unsalted and fast, making password hashes trivially crackable; use bcrypt, scrypt, or argon2 with a per-user salt.\"},\n{\"line\":13,\"category\":\"security\",\"severity\":\"medium\",\"message\":\"Hash comparison uses non-constant-time == which enables timing attacks; use hmac.compare_digest.\"},\n{\"line\":22,\"category\":\"security\",\"severity\":\"high\",\"message\":\"Token comparison uses non-constant-time == allowing timing attacks to forge signatures; use hmac.compare_digest.\"},\n{\"line\":20,\"category\":\"error-handling\",\"severity\":\"low\",\"message\":\"No type or None validation of message or token, so non-string input raises AttributeError or TypeError instead of returning False.\"},\n{\"line\":16,\"category\":\"security\",\"severity\":\"medium\",\"message\":\"Signed token has no expiry, nonce, or context binding, so valid signatures can be replayed indefinitely.\"}\n]",
+   "findings": [
+    {
+     "line": 5,
+     "category": "security",
+     "severity": "high",
+     "message": "Hardcoded live secret key committed in source; it should be loaded from environment or a secret manager and rotated.",
+     "file": "auth.py"
+    },
+    {
+     "line": 9,
+     "category": "security",
+     "severity": "high",
+     "message": "MD5 is unsalted and fast, making password hashes trivially crackable; use bcrypt, scrypt, or argon2 with a per-user salt.",
+     "file": "auth.py"
+    },
+    {
+     "line": 13,
+     "category": "security",
+     "severity": "medium",
+     "message": "Hash comparison uses non-constant-time == which enables timing attacks; use hmac.compare_digest.",
+     "file": "auth.py"
+    },
+    {
+     "line": 22,
+     "category": "security",
+     "severity": "high",
+     "message": "Token comparison uses non-constant-time == allowing timing attacks to forge signatures; use hmac.compare_digest.",
+     "file": "auth.py"
+    },
+    {
+     "line": 20,
+     "category": "error-handling",
+     "severity": "low",
+     "message": "No type or None validation of message or token, so non-string input raises AttributeError or TypeError instead of returning False.",
+     "file": "auth.py"
+    },
+    {
+     "line": 16,
+     "category": "security",
+     "severity": "medium",
+     "message": "Signed token has no expiry, nonce, or context binding, so valid signatures can be replayed indefinitely.",
+     "file": "auth.py"
+    }
+   ]
+  },
+  {
+   "cond": "single",
+   "file": "cache.py",
+   "seconds": 6.5,
+   "num_turns": 1,
+   "cost_usd": 0.016116899999999997,
+   "raw": "[{\"line\": 19, \"category\": \"concurrency\", \"severity\": \"high\", \"message\": \"get_or_compute reads and writes self._data without holding self._lock, causing a check-then-act race with get/clear, and concurrent callers may compute the same key multiple times.\"},\n{\"line\": 20, \"category\": \"concurrency\", \"severity\": \"high\", \"message\": \"Unsynchronized write to self._data races with clear() and other threads, and can raise KeyError at line 22 if clear() runs between the write and the read.\"},\n{\"line\": 21, \"category\": \"concurrency\", \"severity\": \"medium\", \"message\": \"self._hits += 1 is a non-atomic read-modify-write done without the lock, so hit counts can be lost under concurrency.\"},\n{\"line\": 21, \"category\": \"logic\", \"severity\": \"medium\", \"message\": \"A hit is counted unconditionally, including when the value was just computed on a miss, which inflates the hit counter.\"},\n{\"line\": 22, \"category\": \"concurrency\", \"severity\": \"high\", \"message\": \"Reading self._data[key] outside the lock can raise KeyError if clear() runs concurrently after the value was stored.\"},\n{\"line\": 20, \"category\": \"error-handling\", \"severity\": \"low\", \"message\": \"Holding no lock while calling compute() avoids blocking, but there is no per-key coordination, so expensive computations may be duplicated (cache stampede); if the lock is added naively, compute() could deadlock on re-entry since Lock is non-reentrant.\"},\n{\"line\": 11, \"category\": \"logic\", \"severity\": \"low\", \"message\": \"get() returns None for a missing key, which is indistinguishable from a cached None value, and misses are not counted, so the counters give an incomplete picture.\"}]",
+   "findings": [
+    {
+     "line": 19,
+     "category": "concurrency",
+     "severity": "high",
+     "message": "get_or_compute reads and writes self._data without holding self._lock, causing a check-then-act race with get/clear, and concurrent callers may compute the same key multiple times.",
+     "file": "cache.py"
+    },
+    {
+     "line": 20,
+     "category": "concurrency",
+     "severity": "high",
+     "message": "Unsynchronized write to self._data races with clear() and other threads, and can raise KeyError at line 22 if clear() runs between the write and the read.",
+     "file": "cache.py"
+    },
+    {
+     "line": 21,
+     "category": "concurrency",
+     "severity": "medium",
+     "message": "self._hits += 1 is a non-atomic read-modify-write done without the lock, so hit counts can be lost under concurrency.",
+     "file": "cache.py"
+    },
+    {
+     "line": 21,
+     "category": "logic",
+     "severity": "medium",
+     "message": "A hit is counted unconditionally, including when the value was just computed on a miss, which inflates the hit counter.",
+     "file": "cache.py"
+    },
+    {
+     "line": 22,
+     "category": "concurrency",
+     "severity": "high",
+     "message": "Reading self._data[key] outside the lock can raise KeyError if clear() runs concurrently after the value was stored.",
+     "file": "cache.py"
+    },
+    {
+     "line": 20,
+     "category": "error-handling",
+     "severity": "low",
+     "message": "Holding no lock while calling compute() avoids blocking, but there is no per-key coordination, so expensive computations may be duplicated (cache stampede); if the lock is added naively, compute() could deadlock on re-entry since Lock is non-reentrant.",
+     "file": "cache.py"
+    },
+    {
+     "line": 11,
+     "category": "logic",
+     "severity": "low",
+     "message": "get() returns None for a missing key, which is indistinguishable from a cached None value, and misses are not counted, so the counters give an incomplete picture.",
+     "file": "cache.py"
+    }
+   ]
+  },
+  {
+   "cond": "single",
+   "file": "date_utils.py",
+   "seconds": 3.7,
+   "num_turns": 1,
+   "cost_usd": 0.0119349,
+   "raw": "[{\"line\": 5, \"category\": \"logic\", \"severity\": \"high\", \"message\": \"is_leap_year ignores the Gregorian century rules (divisible by 100 is not a leap year unless also divisible by 400), so years like 1900 and 2100 are wrongly treated as leap years and days_in_month returns 29 for their February.\"}, {\"line\": 8, \"category\": \"error-handling\", \"severity\": \"low\", \"message\": \"days_in_month does not validate that month is in 1..12, so invalid values such as 0 or 13 silently return 31 instead of raising an error.\"}]",
+   "findings": [
+    {
+     "line": 5,
+     "category": "logic",
+     "severity": "high",
+     "message": "is_leap_year ignores the Gregorian century rules (divisible by 100 is not a leap year unless also divisible by 400), so years like 1900 and 2100 are wrongly treated as leap years and days_in_month returns 29 for their February.",
+     "file": "date_utils.py"
+    },
+    {
+     "line": 8,
+     "category": "error-handling",
+     "severity": "low",
+     "message": "days_in_month does not validate that month is in 1..12, so invalid values such as 0 or 13 silently return 31 instead of raising an error.",
+     "file": "date_utils.py"
+    }
+   ]
+  },
+  {
+   "cond": "single",
+   "file": "discount.py",
+   "seconds": 4.6,
+   "num_turns": 1,
+   "cost_usd": 0.0081046,
+   "raw": "[{\"line\":12,\"category\":\"logic\",\"severity\":\"medium\",\"message\":\"Docstring says orders of 100 or more get the discount, but `total > 100` excludes exactly 100 (should be `>= 100`).\"},{\"line\":14,\"category\":\"logic\",\"severity\":\"high\",\"message\":\"The final price is never clamped to zero, so a coupon larger than the discounted total yields a negative price, violating the stated rule (use max(0, ...)).\"},{\"line\":14,\"category\":\"error-handling\",\"severity\":\"medium\",\"message\":\"coupon_value and total are not validated, so a negative coupon increases the price and a negative or non-numeric total/coupon produces wrong results or a TypeError.\"},{\"line\":13,\"category\":\"logic\",\"severity\":\"low\",\"message\":\"Using float arithmetic and round() for currency can cause rounding errors (e.g., banker's rounding/binary float representation); Decimal should be used for money.\"},{\"line\":18,\"category\":\"error-handling\",\"severity\":\"low\",\"message\":\"shipping_cost does not validate weight_kg, so negative weights get the cheapest rate and None/non-numeric input raises an unhelpful TypeError.\"}]",
+   "findings": [
+    {
+     "line": 12,
+     "category": "logic",
+     "severity": "medium",
+     "message": "Docstring says orders of 100 or more get the discount, but `total > 100` excludes exactly 100 (should be `>= 100`).",
+     "file": "discount.py"
+    },
+    {
+     "line": 14,
+     "category": "logic",
+     "severity": "high",
+     "message": "The final price is never clamped to zero, so a coupon larger than the discounted total yields a negative price, violating the stated rule (use max(0, ...)).",
+     "file": "discount.py"
+    },
+    {
+     "line": 14,
+     "category": "error-handling",
+     "severity": "medium",
+     "message": "coupon_value and total are not validated, so a negative coupon increases the price and a negative or non-numeric total/coupon produces wrong results or a TypeError.",
+     "file": "discount.py"
+    },
+    {
+     "line": 13,
+     "category": "logic",
+     "severity": "low",
+     "message": "Using float arithmetic and round() for currency can cause rounding errors (e.g., banker's rounding/binary float representation); Decimal should be used for money.",
+     "file": "discount.py"
+    },
+    {
+     "line": 18,
+     "category": "error-handling",
+     "severity": "low",
+     "message": "shipping_cost does not validate weight_kg, so negative weights get the cheapest rate and None/non-numeric input raises an unhelpful TypeError.",
+     "file": "discount.py"
+    }
+   ]
+  },
+  {
+   "cond": "single",
+   "file": "file_utils.py",
+   "seconds": 5.7,
+   "num_turns": 1,
+   "cost_usd": 0.009234599999999999,
+   "raw": "[\n{\"line\": 8, \"category\": \"security\", \"severity\": \"high\", \"message\": \"Path traversal: os.path.join with unvalidated filename allows '../' sequences or an absolute path (which discards UPLOAD_DIR) to read arbitrary files.\"},\n{\"line\": 14, \"category\": \"security\", \"severity\": \"high\", \"message\": \"Command injection: filename is concatenated unquoted into a shell command via os.system, allowing arbitrary command execution (e.g., '; rm -rf /') and also path traversal.\"},\n{\"line\": 14, \"category\": \"error-handling\", \"severity\": \"medium\", \"message\": \"The os.system exit status is ignored, so gzip failures (missing file, existing .gz, disk full) go unreported to the caller.\"},\n{\"line\": 14, \"category\": \"logic\", \"severity\": \"low\", \"message\": \"Filenames beginning with '-' are interpreted as gzip options, and filenames with spaces are split into multiple arguments, causing wrong files to be processed.\"},\n{\"line\": 9, \"category\": \"error-handling\", \"severity\": \"low\", \"message\": \"FileNotFoundError/PermissionError/IsADirectoryError are not handled, and the entire file is read into memory with no size limit, so large uploads can exhaust memory.\"},\n{\"line\": 18, \"category\": \"error-handling\", \"severity\": \"low\", \"message\": \"os.listdir raises if UPLOAD_DIR is missing or unreadable and returns subdirectories and .gz artifacts along with uploads, with no handling or filtering.\"}\n]",
+   "findings": [
+    {
+     "line": 8,
+     "category": "security",
+     "severity": "high",
+     "message": "Path traversal: os.path.join with unvalidated filename allows '../' sequences or an absolute path (which discards UPLOAD_DIR) to read arbitrary files.",
+     "file": "file_utils.py"
+    },
+    {
+     "line": 14,
+     "category": "security",
+     "severity": "high",
+     "message": "Command injection: filename is concatenated unquoted into a shell command via os.system, allowing arbitrary command execution (e.g., '; rm -rf /') and also path traversal.",
+     "file": "file_utils.py"
+    },
+    {
+     "line": 14,
+     "category": "error-handling",
+     "severity": "medium",
+     "message": "The os.system exit status is ignored, so gzip failures (missing file, existing .gz, disk full) go unreported to the caller.",
+     "file": "file_utils.py"
+    },
+    {
+     "line": 14,
+     "category": "logic",
+     "severity": "low",
+     "message": "Filenames beginning with '-' are interpreted as gzip options, and filenames with spaces are split into multiple arguments, causing wrong files to be processed.",
+     "file": "file_utils.py"
+    },
+    {
+     "line": 9,
+     "category": "error-handling",
+     "severity": "low",
+     "message": "FileNotFoundError/PermissionError/IsADirectoryError are not handled, and the entire file is read into memory with no size limit, so large uploads can exhaust memory.",
+     "file": "file_utils.py"
+    },
+    {
+     "line": 18,
+     "category": "error-handling",
+     "severity": "low",
+     "message": "os.listdir raises if UPLOAD_DIR is missing or unreadable and returns subdirectories and .gz artifacts along with uploads, with no handling or filtering.",
+     "file": "file_utils.py"
+    }
+   ]
+  },
+  {
+   "cond": "single",
+   "file": "inventory.py",
+   "seconds": 5.9,
+   "num_turns": 1,
+   "cost_usd": 0.0094646,
+   "raw": "[{\"line\": 8, \"category\": \"logic\", \"severity\": \"high\", \"message\": \"Mutable default argument `tags=[]` is shared across all calls, so every item without explicit tags shares one list and accumulates repeated 'new' entries.\"},\n{\"line\": 9, \"category\": \"logic\", \"severity\": \"medium\", \"message\": \"`tags.append` mutates the caller-supplied list in place, causing side effects on the caller's data; copy the list instead.\"},\n{\"line\": 10, \"category\": \"logic\", \"severity\": \"medium\", \"message\": \"Adding an item that already exists overwrites its entry, silently discarding the existing quantity and tags instead of adding to it.\"},\n{\"line\": 15, \"category\": \"logic\", \"severity\": \"high\", \"message\": \"remove_item does not check that sufficient stock exists, so quantity can go negative; negative qty values are also not validated.\"},\n{\"line\": 20, \"category\": \"logic\", \"severity\": \"high\", \"message\": \"range(len(names) - 1) skips the last item, so total_stock under-counts the inventory (and returns 0 for a single item).\"},\n{\"line\": 8, \"category\": \"error-handling\", \"severity\": \"low\", \"message\": \"add_item does not validate that qty is a non-negative number, allowing invalid quantities to be stored.\"},\n{\"line\": 4, \"category\": \"concurrency\", \"severity\": \"low\", \"message\": \"Inventory mutations such as the read-modify-write in remove_item are not synchronized, so concurrent use from multiple threads can lose updates.\"}]",
+   "findings": [
+    {
+     "line": 8,
+     "category": "logic",
+     "severity": "high",
+     "message": "Mutable default argument `tags=[]` is shared across all calls, so every item without explicit tags shares one list and accumulates repeated 'new' entries.",
+     "file": "inventory.py"
+    },
+    {
+     "line": 9,
+     "category": "logic",
+     "severity": "medium",
+     "message": "`tags.append` mutates the caller-supplied list in place, causing side effects on the caller's data; copy the list instead.",
+     "file": "inventory.py"
+    },
+    {
+     "line": 10,
+     "category": "logic",
+     "severity": "medium",
+     "message": "Adding an item that already exists overwrites its entry, silently discarding the existing quantity and tags instead of adding to it.",
+     "file": "inventory.py"
+    },
+    {
+     "line": 15,
+     "category": "logic",
+     "severity": "high",
+     "message": "remove_item does not check that sufficient stock exists, so quantity can go negative; negative qty values are also not validated.",
+     "file": "inventory.py"
+    },
+    {
+     "line": 20,
+     "category": "logic",
+     "severity": "high",
+     "message": "range(len(names) - 1) skips the last item, so total_stock under-counts the inventory (and returns 0 for a single item).",
+     "file": "inventory.py"
+    },
+    {
+     "line": 8,
+     "category": "error-handling",
+     "severity": "low",
+     "message": "add_item does not validate that qty is a non-negative number, allowing invalid quantities to be stored.",
+     "file": "inventory.py"
+    },
+    {
+     "line": 4,
+     "category": "concurrency",
+     "severity": "low",
+     "message": "Inventory mutations such as the read-modify-write in remove_item are not synchronized, so concurrent use from multiple threads can lose updates.",
+     "file": "inventory.py"
+    }
+   ]
+  },
+  {
+   "cond": "single",
+   "file": "money.py",
+   "seconds": 8.8,
+   "num_turns": 1,
+   "cost_usd": 0.0128666,
+   "raw": "[\n  {\"line\": 6, \"category\": \"logic\", \"severity\": \"medium\", \"message\": \"Fractional digits beyond two are silently truncated instead of rounded or rejected, so \\\"1.999\\\" becomes 199 cents and money is lost without any error.\"},\n  {\"line\": 8, \"category\": \"error-handling\", \"severity\": \"medium\", \"message\": \"Input is not validated: a signed fraction such as \\\"1.-5\\\" or \\\"1.+5\\\" is accepted by int() and yields a wrong amount (95 or 105 cents), and underscores or whitespace are also accepted.\"},\n  {\"line\": 8, \"category\": \"error-handling\", \"severity\": \"low\", \"message\": \"Inputs like \\\"-.50\\\" (whole part is just \\\"-\\\") raise an unhelpful ValueError from int(\\\"-\\\"), and malformed input in general surfaces as raw ValueError or AttributeError for non-str input rather than a clear error.\"}\n]",
+   "findings": [
+    {
+     "line": 6,
+     "category": "logic",
+     "severity": "medium",
+     "message": "Fractional digits beyond two are silently truncated instead of rounded or rejected, so \"1.999\" becomes 199 cents and money is lost without any error.",
+     "file": "money.py"
+    },
+    {
+     "line": 8,
+     "category": "error-handling",
+     "severity": "medium",
+     "message": "Input is not validated: a signed fraction such as \"1.-5\" or \"1.+5\" is accepted by int() and yields a wrong amount (95 or 105 cents), and underscores or whitespace are also accepted.",
+     "file": "money.py"
+    },
+    {
+     "line": 8,
+     "category": "error-handling",
+     "severity": "low",
+     "message": "Inputs like \"-.50\" (whole part is just \"-\") raise an unhelpful ValueError from int(\"-\"), and malformed input in general surfaces as raw ValueError or AttributeError for non-str input rather than a clear error.",
+     "file": "money.py"
+    }
+   ]
+  },
+  {
+   "cond": "single",
+   "file": "order_parser.py",
+   "seconds": 5.0,
+   "num_turns": 1,
+   "cost_usd": 0.0075926,
+   "raw": "[\n{\"line\": 9, \"category\": \"error-handling\", \"severity\": \"high\", \"message\": \"Bare `except:` swallows all exceptions including KeyboardInterrupt and SystemExit, and silently hides the cause of parse failures.\"},\n{\"line\": 10, \"category\": \"error-handling\", \"severity\": \"medium\", \"message\": \"Returning None on any failure discards error information and forces callers to handle None, which callers do not do.\"},\n{\"line\": 8, \"category\": \"logic\", \"severity\": \"medium\", \"message\": \"`data[\\\"items\\\"]` is not validated (may be None, a non-list, or a string/dict), and `data` itself may not be a dict, so malformed orders pass through or fail unpredictably downstream.\"},\n{\"line\": 15, \"category\": \"error-handling\", \"severity\": \"high\", \"message\": \"`parse_order` can return None, so `order[\\\"items\\\"]` raises TypeError on any invalid payload.\"},\n{\"line\": 15, \"category\": \"logic\", \"severity\": \"low\", \"message\": \"`len(order[\\\"items\\\"])` raises TypeError if items is None or a non-sized value, since items is never validated.\"}\n]",
+   "findings": [
+    {
+     "line": 9,
+     "category": "error-handling",
+     "severity": "high",
+     "message": "Bare `except:` swallows all exceptions including KeyboardInterrupt and SystemExit, and silently hides the cause of parse failures.",
+     "file": "order_parser.py"
+    },
+    {
+     "line": 10,
+     "category": "error-handling",
+     "severity": "medium",
+     "message": "Returning None on any failure discards error information and forces callers to handle None, which callers do not do.",
+     "file": "order_parser.py"
+    },
+    {
+     "line": 8,
+     "category": "logic",
+     "severity": "medium",
+     "message": "`data[\"items\"]` is not validated (may be None, a non-list, or a string/dict), and `data` itself may not be a dict, so malformed orders pass through or fail unpredictably downstream.",
+     "file": "order_parser.py"
+    },
+    {
+     "line": 15,
+     "category": "error-handling",
+     "severity": "high",
+     "message": "`parse_order` can return None, so `order[\"items\"]` raises TypeError on any invalid payload.",
+     "file": "order_parser.py"
+    },
+    {
+     "line": 15,
+     "category": "logic",
+     "severity": "low",
+     "message": "`len(order[\"items\"])` raises TypeError if items is None or a non-sized value, since items is never validated.",
+     "file": "order_parser.py"
+    }
+   ]
+  },
+  {
+   "cond": "single",
+   "file": "report.py",
+   "seconds": 6.6,
+   "num_turns": 1,
+   "cost_usd": 0.0102086,
+   "raw": "[\n{\"line\":5,\"category\":\"performance\",\"severity\":\"medium\",\"message\":\"Using a list for `seen` makes membership checks O(n), so unique_customers is O(n²); use a set alongside a list (or dict.fromkeys) to preserve order.\"},\n{\"line\":7,\"category\":\"performance\",\"severity\":\"medium\",\"message\":\"`not in seen` does a linear scan of a list on every order, causing quadratic runtime on large order sets.\"},\n{\"line\":15,\"category\":\"error-handling\",\"severity\":\"medium\",\"message\":\"Slicing `order[\\\"date\\\"][:10]` assumes a non-null string in ISO format; a missing key, None, or datetime object raises KeyError/TypeError, and non-ISO formats silently produce wrong day buckets.\"},\n{\"line\":16,\"category\":\"logic\",\"severity\":\"medium\",\"message\":\"Summing `order[\\\"amount\\\"]` with plain numbers (likely floats) accumulates rounding errors in monetary totals and raises KeyError/TypeError on missing or string amounts; use Decimal/integer cents and validate.\"},\n{\"line\":21,\"category\":\"resource\",\"severity\":\"high\",\"message\":\"File is opened without a context manager and never closed, so the handle leaks and buffered data may not be flushed if an exception occurs or on non-CPython runtimes.\"},\n{\"line\":21,\"category\":\"other\",\"severity\":\"low\",\"message\":\"open() is called without an explicit encoding or newline='' so output depends on platform defaults (e.g., cp1252 and CRLF translation on Windows).\"},\n{\"line\":23,\"category\":\"error-handling\",\"severity\":\"medium\",\"message\":\"Writes are not protected by try/finally or a with-block, so a failure partway through leaves a truncated report file with an unclosed handle and no error handling for I/O failures.\"}\n]",
+   "findings": [
+    {
+     "line": 5,
+     "category": "performance",
+     "severity": "medium",
+     "message": "Using a list for `seen` makes membership checks O(n), so unique_customers is O(n²); use a set alongside a list (or dict.fromkeys) to preserve order.",
+     "file": "report.py"
+    },
+    {
+     "line": 7,
+     "category": "performance",
+     "severity": "medium",
+     "message": "`not in seen` does a linear scan of a list on every order, causing quadratic runtime on large order sets.",
+     "file": "report.py"
+    },
+    {
+     "line": 15,
+     "category": "error-handling",
+     "severity": "medium",
+     "message": "Slicing `order[\"date\"][:10]` assumes a non-null string in ISO format; a missing key, None, or datetime object raises KeyError/TypeError, and non-ISO formats silently produce wrong day buckets.",
+     "file": "report.py"
+    },
+    {
+     "line": 16,
+     "category": "logic",
+     "severity": "medium",
+     "message": "Summing `order[\"amount\"]` with plain numbers (likely floats) accumulates rounding errors in monetary totals and raises KeyError/TypeError on missing or string amounts; use Decimal/integer cents and validate.",
+     "file": "report.py"
+    },
+    {
+     "line": 21,
+     "category": "resource",
+     "severity": "high",
+     "message": "File is opened without a context manager and never closed, so the handle leaks and buffered data may not be flushed if an exception occurs or on non-CPython runtimes.",
+     "file": "report.py"
+    },
+    {
+     "line": 21,
+     "category": "other",
+     "severity": "low",
+     "message": "open() is called without an explicit encoding or newline='' so output depends on platform defaults (e.g., cp1252 and CRLF translation on Windows).",
+     "file": "report.py"
+    },
+    {
+     "line": 23,
+     "category": "error-handling",
+     "severity": "medium",
+     "message": "Writes are not protected by try/finally or a with-block, so a failure partway through leaves a truncated report file with an unclosed handle and no error handling for I/O failures.",
+     "file": "report.py"
+    }
+   ]
+  },
+  {
+   "cond": "single",
+   "file": "session_store.py",
+   "seconds": 5.5,
+   "num_turns": 1,
+   "cost_usd": 0.0086886,
+   "raw": "[{\"line\": 11, \"category\": \"security\", \"severity\": \"high\", \"message\": \"pickle.loads on an unsigned, client-controlled cookie allows arbitrary code execution via a crafted pickle payload (remote code execution).\"},\n{\"line\": 11, \"category\": \"security\", \"severity\": \"high\", \"message\": \"The cookie has no signature or MAC, so users can tamper with session contents and forge any session data.\"},\n{\"line\": 16, \"category\": \"security\", \"severity\": \"high\", \"message\": \"is_admin trusts the 'role' field from an unauthenticated, forgeable cookie, so any user can escalate to admin by crafting their own cookie.\"},\n{\"line\": 11, \"category\": \"error-handling\", \"severity\": \"medium\", \"message\": \"Malformed base64 or pickle data raises uncaught exceptions (binascii.Error, UnpicklingError, etc.) instead of being treated as an invalid session, enabling 500 errors from bad cookies.\"},\n{\"line\": 16, \"category\": \"error-handling\", \"severity\": \"medium\", \"message\": \"session.get assumes the deserialized object is a dict; a cookie unpickling to another type (or None) raises AttributeError rather than returning False.\"},\n{\"line\": 7, \"category\": \"security\", \"severity\": \"low\", \"message\": \"Session is serialized with pickle rather than a safe format like JSON, and no expiry or size limit is enforced on the cookie contents.\"}]",
+   "findings": [
+    {
+     "line": 11,
+     "category": "security",
+     "severity": "high",
+     "message": "pickle.loads on an unsigned, client-controlled cookie allows arbitrary code execution via a crafted pickle payload (remote code execution).",
+     "file": "session_store.py"
+    },
+    {
+     "line": 11,
+     "category": "security",
+     "severity": "high",
+     "message": "The cookie has no signature or MAC, so users can tamper with session contents and forge any session data.",
+     "file": "session_store.py"
+    },
+    {
+     "line": 16,
+     "category": "security",
+     "severity": "high",
+     "message": "is_admin trusts the 'role' field from an unauthenticated, forgeable cookie, so any user can escalate to admin by crafting their own cookie.",
+     "file": "session_store.py"
+    },
+    {
+     "line": 11,
+     "category": "error-handling",
+     "severity": "medium",
+     "message": "Malformed base64 or pickle data raises uncaught exceptions (binascii.Error, UnpicklingError, etc.) instead of being treated as an invalid session, enabling 500 errors from bad cookies.",
+     "file": "session_store.py"
+    },
+    {
+     "line": 16,
+     "category": "error-handling",
+     "severity": "medium",
+     "message": "session.get assumes the deserialized object is a dict; a cookie unpickling to another type (or None) raises AttributeError rather than returning False.",
+     "file": "session_store.py"
+    },
+    {
+     "line": 7,
+     "category": "security",
+     "severity": "low",
+     "message": "Session is serialized with pickle rather than a safe format like JSON, and no expiry or size limit is enforced on the cookie contents.",
+     "file": "session_store.py"
+    }
+   ]
+  },
+  {
+   "cond": "single",
+   "file": "stats.py",
+   "seconds": 4.2,
+   "num_turns": 1,
+   "cost_usd": 0.0068985999999999995,
+   "raw": "[{\"line\":5,\"category\":\"error-handling\",\"severity\":\"medium\",\"message\":\"average() raises ZeroDivisionError on an empty sequence, and it also fails on one-shot iterators/generators because len() is called after sum() has consumed them.\"},{\"line\":11,\"category\":\"logic\",\"severity\":\"high\",\"message\":\"median() returns s[mid], which is the upper-middle element for even-length inputs instead of the mean of the two middle values, so the result is wrong.\"},{\"line\":11,\"category\":\"error-handling\",\"severity\":\"medium\",\"message\":\"median() raises IndexError on an empty sequence instead of handling it with a clear error or a defined return value.\"},{\"line\":17,\"category\":\"logic\",\"severity\":\"low\",\"message\":\"growth_rate() divides by a negative previous value, so the sign of the result is misleading (a rise from -100 to -50 reports -50%); it should divide by abs(previous).\"}]",
+   "findings": [
+    {
+     "line": 5,
+     "category": "error-handling",
+     "severity": "medium",
+     "message": "average() raises ZeroDivisionError on an empty sequence, and it also fails on one-shot iterators/generators because len() is called after sum() has consumed them.",
+     "file": "stats.py"
+    },
+    {
+     "line": 11,
+     "category": "logic",
+     "severity": "high",
+     "message": "median() returns s[mid], which is the upper-middle element for even-length inputs instead of the mean of the two middle values, so the result is wrong.",
+     "file": "stats.py"
+    },
+    {
+     "line": 11,
+     "category": "error-handling",
+     "severity": "medium",
+     "message": "median() raises IndexError on an empty sequence instead of handling it with a clear error or a defined return value.",
+     "file": "stats.py"
+    },
+    {
+     "line": 17,
+     "category": "logic",
+     "severity": "low",
+     "message": "growth_rate() divides by a negative previous value, so the sign of the result is misleading (a rise from -100 to -50 reports -50%); it should divide by abs(previous).",
+     "file": "stats.py"
+    }
+   ]
+  },
+  {
+   "cond": "single",
+   "file": "task_queue.py",
+   "seconds": 4.3,
+   "num_turns": 1,
+   "cost_usd": 0.007246600000000001,
+   "raw": "[{\"line\": 14, \"category\": \"concurrency\", \"severity\": \"medium\", \"message\": \"put() blocks indefinitely with no timeout, non-blocking option, or shutdown/close mechanism, so producers (and consumers in get()) can hang forever and threads can never be cleanly stopped.\"},{\"line\": 21, \"category\": \"concurrency\", \"severity\": \"medium\", \"message\": \"get() waits indefinitely with no timeout or close/sentinel support, so worker threads can never be shut down cleanly once the queue is empty.\"},{\"line\": 19, \"category\": \"performance\", \"severity\": \"low\", \"message\": \"notify_all() on a single shared condition wakes every waiting producer and consumer for each operation (thundering herd); separate not_empty/not_full conditions with notify() would be more efficient.\"}]",
+   "findings": [
+    {
+     "line": 14,
+     "category": "concurrency",
+     "severity": "medium",
+     "message": "put() blocks indefinitely with no timeout, non-blocking option, or shutdown/close mechanism, so producers (and consumers in get()) can hang forever and threads can never be cleanly stopped.",
+     "file": "task_queue.py"
+    },
+    {
+     "line": 21,
+     "category": "concurrency",
+     "severity": "medium",
+     "message": "get() waits indefinitely with no timeout or close/sentinel support, so worker threads can never be shut down cleanly once the queue is empty.",
+     "file": "task_queue.py"
+    },
+    {
+     "line": 19,
+     "category": "performance",
+     "severity": "low",
+     "message": "notify_all() on a single shared condition wakes every waiting producer and consumer for each operation (thundering herd); separate not_empty/not_full conditions with notify() would be more efficient.",
+     "file": "task_queue.py"
+    }
+   ]
+  },
+  {
+   "cond": "single",
+   "file": "user_repo.py",
+   "seconds": 5.1,
+   "num_turns": 1,
+   "cost_usd": 0.0087686,
+   "raw": "[{\"line\":10,\"category\":\"security\",\"severity\":\"high\",\"message\":\"SQL injection: username is interpolated directly into the query via an f-string; use a parameterized query (WHERE username = ?).\"},{\"line\":8,\"category\":\"resource\",\"severity\":\"medium\",\"message\":\"The sqlite3 connection is never closed (including on exceptions), leaking a connection/file handle on every call.\"},{\"line\":16,\"category\":\"resource\",\"severity\":\"medium\",\"message\":\"The `with sqlite3.connect()` context manager only commits/rolls back and does not close the connection, so connections leak; wrap in contextlib.closing or call conn.close().\"},{\"line\":18,\"category\":\"error-handling\",\"severity\":\"medium\",\"message\":\"The INSERT can raise sqlite3.IntegrityError (e.g. duplicate username/email) which is not handled or translated, and create_user returns nothing (no new user id) to the caller.\"},{\"line\":23,\"category\":\"resource\",\"severity\":\"low\",\"message\":\"The connection is not closed after use because the `with` block only manages the transaction, leaking a connection per call.\"},{\"line\":8,\"category\":\"performance\",\"severity\":\"low\",\"message\":\"A new connection is opened on every call with no pooling or reuse, adding avoidable overhead under load.\"}]",
+   "findings": [
+    {
+     "line": 10,
+     "category": "security",
+     "severity": "high",
+     "message": "SQL injection: username is interpolated directly into the query via an f-string; use a parameterized query (WHERE username = ?).",
+     "file": "user_repo.py"
+    },
+    {
+     "line": 8,
+     "category": "resource",
+     "severity": "medium",
+     "message": "The sqlite3 connection is never closed (including on exceptions), leaking a connection/file handle on every call.",
+     "file": "user_repo.py"
+    },
+    {
+     "line": 16,
+     "category": "resource",
+     "severity": "medium",
+     "message": "The `with sqlite3.connect()` context manager only commits/rolls back and does not close the connection, so connections leak; wrap in contextlib.closing or call conn.close().",
+     "file": "user_repo.py"
+    },
+    {
+     "line": 18,
+     "category": "error-handling",
+     "severity": "medium",
+     "message": "The INSERT can raise sqlite3.IntegrityError (e.g. duplicate username/email) which is not handled or translated, and create_user returns nothing (no new user id) to the caller.",
+     "file": "user_repo.py"
+    },
+    {
+     "line": 23,
+     "category": "resource",
+     "severity": "low",
+     "message": "The connection is not closed after use because the `with` block only manages the transaction, leaking a connection per call.",
+     "file": "user_repo.py"
+    },
+    {
+     "line": 8,
+     "category": "performance",
+     "severity": "low",
+     "message": "A new connection is opened on every call with no pooling or reuse, adding avoidable overhead under load.",
+     "file": "user_repo.py"
+    }
+   ]
+  }
+ ]
+}

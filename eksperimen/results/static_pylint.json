@@ -1,0 +1,30 @@
+{
+ "tool": "pylint",
+ "seconds": 1.75,
+ "findings": [
+  {
+   "file": "api_client.py",
+   "line": 8,
+   "rule": "W3101 missing-timeout",
+   "message": "Missing timeout argument for method 'requests.post' can cause your program to hang indefinitely"
+  },
+  {
+   "file": "inventory.py",
+   "line": 8,
+   "rule": "W0102 dangerous-default-value",
+   "message": "Dangerous default value [] as argument"
+  },
+  {
+   "file": "order_parser.py",
+   "line": 9,
+   "rule": "W0702 bare-except",
+   "message": "No exception type(s) specified"
+  },
+  {
+   "file": "report.py",
+   "line": 21,
+   "rule": "W1514 unspecified-encoding",
+   "message": "Using open without explicitly specifying an encoding"
+  }
+ ]
+}
